@@ -37,5 +37,11 @@
     <CudaCompile Include="include\memory.cuh">
       <Filter>ヘッダー ファイル</Filter>
     </CudaCompile>
+    <CudaCompile Include="src\funcs.cu">
+      <Filter>ソース ファイル</Filter>
+    </CudaCompile>
+    <CudaCompile Include="include\funcs.cuh">
+      <Filter>ヘッダー ファイル</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

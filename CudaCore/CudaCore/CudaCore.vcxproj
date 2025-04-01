@@ -29,8 +29,10 @@
   <ItemGroup>
     <ClInclude Include="include\config.h" />
     <ClInclude Include="include\CudaCore.h" />
+    <CudaCompile Include="include\funcs.cuh" />
     <CudaCompile Include="include\memory.cuh" />
     <ClInclude Include="include\pch.h" />
+    <CudaCompile Include="src\funcs.cu" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\memory.cu" />
