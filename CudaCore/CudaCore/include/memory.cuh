@@ -10,4 +10,6 @@ namespace CudaCore
 
 CUDA_CORE void CheckCuda(cudaError_t call);
 
+CUDA_CORE void SampleFunc(int& num);
+
 }
