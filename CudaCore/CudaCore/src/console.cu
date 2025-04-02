@@ -1,10 +1,10 @@
 ﻿#include "CudaCore/include/pch.h"
-#include "CudaCore/include/funcs.cuh"
+#include "CudaCore/include/console.cuh"
 
 CUDA_CORE std::unique_ptr<WACore::ConsoleOuter> &CudaCore::GetConsoleOuter()
 {
     static std::unique_ptr<WACore::ConsoleOuter> consoleOuter = std::make_unique<WACore::ConsoleOuter>();
-    consoleOuter->startTag_ = "[ CudaCore ] ";
+    consoleOuter->startTag_ = "[ CudaCore ]";
     return consoleOuter;
 }
 
