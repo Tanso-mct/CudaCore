@@ -783,3 +783,335 @@ CUDA_CORE bool CudaCore::TryDestroyTextureObj(cudaTextureObject_t *obj)
         return false;
     }
 }
+
+CUDA_CORE void CudaCore::RegisterResource
+(
+    cudaGraphicsResource_t *resource, ID3D11Resource *d3d11Resource, unsigned int flags
+){
+    if (CheckCudaErr(cudaGraphicsD3D11RegisterResource(resource, d3d11Resource, flags)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA register resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "ID3D11Resource address:" + ::GetPointerAddress(d3d11Resource),
+        });
+#endif
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA register resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::RegisterResource failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryRegisterResource(cudaGraphicsResource_t *resource, ID3D11Resource *d3d11Resource, unsigned int flags)
+{
+    if (CheckCudaErr(cudaGraphicsD3D11RegisterResource(resource, d3d11Resource, flags)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA register resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "ID3D11Resource address:" + ::GetPointerAddress(d3d11Resource),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA register resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::UnregisterResource(cudaGraphicsResource_t *resource)
+{
+    if (CheckCudaErr(cudaGraphicsUnregisterResource(*resource)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA unregister resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+        });
+#endif
+        *resource = nullptr;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA unregister resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::UnregisterResource failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryUnregisterResource(cudaGraphicsResource_t *resource)
+{
+    if (CheckCudaErr(cudaGraphicsUnregisterResource(*resource)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA unregister resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+        });
+#endif
+        *resource = nullptr;
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA unregister resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::MapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream)
+{
+    if (CheckCudaErr(cudaGraphicsMapResources(count, resource, stream)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA map resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "stream address:" + ::GetPointerAddress(stream),
+            "count:" + std::to_string(count),
+        });
+#endif
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA map resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::MapResource failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryMapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream)
+{
+    if (CheckCudaErr(cudaGraphicsMapResources(count, resource, stream)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA map resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "stream address:" + ::GetPointerAddress(stream),
+            "count:" + std::to_string(count),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA map resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::UnmapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream)
+{
+    if (CheckCudaErr(cudaGraphicsUnmapResources(count, resource, stream)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA unmap resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "stream address:" + ::GetPointerAddress(stream),
+            "count:" + std::to_string(count),
+        });
+#endif
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA unmap resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::UnmapResource failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryUnmapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream)
+{
+    if (CheckCudaErr(cudaGraphicsUnmapResources(count, resource, stream)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA unmap resource succeeded.", 
+            "resource address:" + ::GetPointerAddress(*resource),
+            "stream address:" + ::GetPointerAddress(stream),
+            "count:" + std::to_string(count),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA unmap resource failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::GetMappedPointer(void **devPtr, size_t *size, cudaGraphicsResource_t resource)
+{
+    if (CheckCudaErr(cudaGraphicsResourceGetMappedPointer(devPtr, size, resource)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA get mapped pointer succeeded.", 
+            "pointer address:" + ::GetPointerAddress(*devPtr),
+            "size:" + std::to_string(*size),
+            "resource address:" + ::GetPointerAddress(resource),
+        });
+#endif
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA get mapped pointer failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::GetMappedPointer failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryGetMappedPointer(void **devPtr, size_t *size, cudaGraphicsResource_t resource)
+{
+    if (CheckCudaErr(cudaGraphicsResourceGetMappedPointer(devPtr, size, resource)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA get mapped pointer succeeded.", 
+            "pointer address:" + ::GetPointerAddress(*devPtr),
+            "size:" + std::to_string(*size),
+            "resource address:" + ::GetPointerAddress(resource),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA get mapped pointer failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::GetMappedArray
+(
+    cudaArray_t *array, cudaGraphicsResource_t resource, unsigned int arrayIndex, unsigned int mipLevel
+){
+    if (CheckCudaErr(cudaGraphicsSubResourceGetMappedArray(array, resource, arrayIndex, mipLevel)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA get mapped array succeeded.", 
+            "array address:" + ::GetPointerAddress(*array),
+            "resource address:" + ::GetPointerAddress(resource),
+            "array index:" + std::to_string(arrayIndex),
+            "mip level:" + std::to_string(mipLevel),
+        });
+#endif
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA get mapped array failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        throw std::runtime_error("CudaCore::GetMappedArray failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryGetMappedArray(cudaArray_t *array, cudaGraphicsResource_t resource, unsigned int arrayIndex, unsigned int mipLevel)
+{
+    if (CheckCudaErr(cudaGraphicsSubResourceGetMappedArray(array, resource, arrayIndex, mipLevel)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA get mapped array succeeded.", 
+            "array address:" + ::GetPointerAddress(*array),
+            "resource address:" + ::GetPointerAddress(resource),
+            "array index:" + std::to_string(arrayIndex),
+            "mip level:" + std::to_string(mipLevel),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        CudaCore::CoutErr
+        ({
+            "CUDA get mapped array failed.", 
+            "code:" + std::to_string(cudaGetLastError()),
+            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+        });
+
+        return false;
+    }
+}

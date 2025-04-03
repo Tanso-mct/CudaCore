@@ -70,5 +70,35 @@ CUDA_CORE bool TryCreateTextureObj
 CUDA_CORE void DestroyTextureObj(cudaTextureObject_t *obj);
 CUDA_CORE bool TryDestroyTextureObj(cudaTextureObject_t *obj);
 
+CUDA_CORE void RegisterResource
+(
+    cudaGraphicsResource_t *resource, ID3D11Resource *d3d11Resource, 
+    unsigned int flags = cudaGraphicsRegisterFlagsNone
+);
+CUDA_CORE bool TryRegisterResource
+(
+    cudaGraphicsResource_t *resource, ID3D11Resource *d3d11Resource, 
+    unsigned int flags = cudaGraphicsRegisterFlagsNone
+);
+CUDA_CORE void UnregisterResource(cudaGraphicsResource_t *resource);
+CUDA_CORE bool TryUnregisterResource(cudaGraphicsResource_t *resource);
+
+CUDA_CORE void MapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream = 0);
+CUDA_CORE bool TryMapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream = 0);
+CUDA_CORE void UnmapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream = 0);
+CUDA_CORE bool TryUnmapResource(int count, cudaGraphicsResource_t *resource, cudaStream_t stream = 0);
+
+CUDA_CORE void GetMappedPointer(void **devPtr, size_t *size, cudaGraphicsResource_t resource);
+CUDA_CORE bool TryGetMappedPointer(void **devPtr, size_t *size, cudaGraphicsResource_t resource);
+
+CUDA_CORE void GetMappedArray
+(
+    cudaArray_t *array, cudaGraphicsResource_t resource, unsigned int arrayIndex, unsigned int mipLevel
+);
+CUDA_CORE bool TryGetMappedArray
+(
+    cudaArray_t *array, cudaGraphicsResource_t resource, unsigned int arrayIndex, unsigned int mipLevel
+);
+
 
 } // namespace CudaCore

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 
 TEST(CudaCore, DeviceMemory) 
 {
@@ -292,6 +292,7 @@ TEST(CudaCore, SurfaceObjectTryVer)
     EXPECT_EQ(array, nullptr);
     EXPECT_EQ(surfaceObj, 0);
 }
+
 TEST(CudaCore, TextureObject)
 {
     // Allocate array memory for texture object
@@ -366,4 +367,490 @@ TEST(CudaCore, TextureObjectTryVer)
 
     EXPECT_EQ(array, nullptr);
     EXPECT_EQ(texObj, 0);
+}
+
+TEST(CudaCore, RegisterResource)
+{
+    // Declare device and device context pointers
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA
+    cudaGraphicsResource* cudaResource = nullptr;
+    CudaCore::RegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+
+    // Unregister the resource
+    CudaCore::UnregisterResource(&cudaResource);
+
+    EXPECT_EQ(cudaResource, nullptr);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, RegisterResourceTryVer)
+{
+    bool result = true;
+
+    // Declare device and device context pointers with error checking
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation with error checking
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA with error checking
+    cudaGraphicsResource* cudaResource = nullptr;
+    result = CudaCore::TryRegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+    ASSERT_EQ(result, true);
+
+    // Unregister the resource with error checking
+    result = CudaCore::TryUnregisterResource(&cudaResource);
+    ASSERT_EQ(result, true);
+
+    EXPECT_EQ(cudaResource, nullptr);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, MapResource)
+{
+    // Declare device and device context pointers
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA
+    cudaGraphicsResource* cudaResource = nullptr;
+    CudaCore::RegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+
+    // Map the resource
+    int count = 1;
+    CudaCore::MapResource(count, &cudaResource);
+
+    // Unmap the resource
+    CudaCore::UnmapResource(count, &cudaResource);
+
+    // Unregister the resource
+    CudaCore::UnregisterResource(&cudaResource);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, MapResourceTryVer)
+{
+    bool result = true;
+
+    // Declare device and device context pointers with error checking
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation with error checking
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA with error checking
+    cudaGraphicsResource* cudaResource = nullptr;
+    result = CudaCore::TryRegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+    ASSERT_EQ(result, true);
+
+    // Map the resource with error checking
+    int count = 1;
+    result = CudaCore::TryMapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Unmap the resource with error checking
+    result = CudaCore::TryUnmapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Unregister the resource with error checking
+    result = CudaCore::TryUnregisterResource(&cudaResource);
+    ASSERT_EQ(result, true);
+
+    EXPECT_EQ(cudaResource, nullptr);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, GetMappedPointer)
+{
+    // Declare device and device context pointers
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA
+    cudaGraphicsResource* cudaResource = nullptr;
+    CudaCore::RegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+
+    // Map the resource
+    int count = 1;
+    CudaCore::MapResource(count, &cudaResource);
+
+    // Get mapped pointer
+    void* devPtr = nullptr;
+    size_t size = (size_t)bufferDesc.ByteWidth;
+    CudaCore::GetMappedPointer(&devPtr, &size, cudaResource);
+
+    // Unmap the resource
+    CudaCore::UnmapResource(count, &cudaResource);
+
+    // Unregister the resource
+    CudaCore::UnregisterResource(&cudaResource);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, GetMappedPointerTryVer)
+{
+    bool result = true;
+
+    // Declare device and device context pointers with error checking
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation with error checking
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(float) * 16;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    float initData[16] = { 0 };
+    D3D11_SUBRESOURCE_DATA initDataDesc = {};
+    initDataDesc.pSysMem = initData;
+
+    ID3D11Buffer* buffer = nullptr;
+    hr = device->CreateBuffer(&bufferDesc, &initDataDesc, &buffer);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA with error checking
+    cudaGraphicsResource* cudaResource = nullptr;
+    result = CudaCore::TryRegisterResource(&cudaResource, buffer, cudaGraphicsRegisterFlagsNone);
+    ASSERT_EQ(result, true);
+
+    // Map the resource with error checking
+    int count = 1;
+    result = CudaCore::TryMapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Get mapped pointer with error checking
+    void* devPtr = nullptr;
+    size_t size = (size_t)bufferDesc.ByteWidth;
+    result = CudaCore::TryGetMappedPointer(&devPtr, &size, cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Unmap the resource with error checking
+    result = CudaCore::TryUnmapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Unregister the resource with error checking
+    result = CudaCore::TryUnregisterResource(&cudaResource);
+    ASSERT_EQ(result, true);
+
+    buffer->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, GetMappedArray)
+{
+    // Declare device and device context pointers
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_TEXTURE2D_DESC texDesc = {};
+    texDesc.Width = 1024;
+    texDesc.Height = 1024;
+    texDesc.MipLevels = 1;
+    texDesc.ArraySize = 1;
+    texDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.Usage = D3D11_USAGE_DEFAULT;
+    texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+    ID3D11Texture2D* texture = nullptr;
+    hr = device->CreateTexture2D(&texDesc, nullptr, &texture);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA
+    cudaGraphicsResource* cudaResource = nullptr;
+    CudaCore::RegisterResource(&cudaResource, texture, cudaGraphicsRegisterFlagsNone);
+
+    // Map the resource
+    int count = 1;
+    CudaCore::MapResource(count, &cudaResource);
+
+    // Get mapped array
+    cudaArray_t array = nullptr;
+    unsigned int arrayIndex = 0;
+    unsigned int mipLevel = 0;
+    CudaCore::GetMappedArray(&array, cudaResource, arrayIndex, mipLevel);
+
+    // Unmap the resource
+    CudaCore::UnmapResource(count, &cudaResource);
+
+    // Unregister the resource
+    CudaCore::UnregisterResource(&cudaResource);
+
+    texture->Release();
+    device->Release();
+    deviceContext->Release();
+}
+
+TEST(CudaCore, GetMappedArrayTryVer)
+{
+    bool result = true;
+
+    // Declare device and device context pointers with error checking
+    ID3D11Device* device = nullptr;
+    ID3D11DeviceContext* deviceContext = nullptr;
+
+    // Device Creation with error checking
+    D3D_FEATURE_LEVEL featureLevel;
+    HRESULT hr = D3D11CreateDevice(
+        nullptr,                    // Use default adapter
+        D3D_DRIVER_TYPE_HARDWARE,   // Use hardware driver
+        nullptr,                    // Software rasterizer is not used
+        0,                          // Flag is not set.
+        nullptr,                    // No specific level of functionality required
+        0,                          // Size of the above array
+        D3D11_SDK_VERSION,          // SDK Version
+        &device,
+        &featureLevel,
+        &deviceContext
+    );
+
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    D3D11_TEXTURE2D_DESC texDesc = {};
+    texDesc.Width = 1024;
+    texDesc.Height = 1024;
+    texDesc.MipLevels = 1;
+    texDesc.ArraySize = 1;
+    texDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.Usage = D3D11_USAGE_DEFAULT;
+    texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+    ID3D11Texture2D* texture = nullptr;
+    hr = device->CreateTexture2D(&texDesc, nullptr, &texture);
+    if (FAILED(hr)) ASSERT_TRUE(false);
+
+    // Register the resource with CUDA with error checking
+    cudaGraphicsResource* cudaResource = nullptr;
+    result = CudaCore::TryRegisterResource(&cudaResource, texture, cudaGraphicsRegisterFlagsNone);
+    ASSERT_EQ(result, true);
+
+    // Map the resource with error checking
+    int count = 1;
+    result = CudaCore::TryMapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Get mapped array with error checking
+    cudaArray_t array = nullptr;
+    unsigned int arrayIndex = 0;
+    unsigned int mipLevel = 0;
+    result = CudaCore::TryGetMappedArray(&array, cudaResource, arrayIndex, mipLevel);
+    ASSERT_EQ(result, true);
+
+    // Unmap the resource with error checking
+    result = CudaCore::TryUnmapResource(count, &cudaResource);
+    ASSERT_EQ(result, true);
+
+    // Unregister the resource with error checking
+    result = CudaCore::TryUnregisterResource(&cudaResource);
+    ASSERT_EQ(result, true);
+
+    texture->Release();
+    device->Release();
+    deviceContext->Release();
 }
