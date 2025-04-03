@@ -36,11 +36,12 @@ CUDA_CORE void CudaCore::Malloc(void **devPtr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA malloc failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::Malloc failed");
@@ -63,11 +64,12 @@ CUDA_CORE bool CudaCore::TryMalloc(void **devPtr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA malloc failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -89,11 +91,12 @@ CUDA_CORE void CudaCore::Free(void **devPtr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA free failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::Free failed");
@@ -115,11 +118,12 @@ CUDA_CORE bool CudaCore::TryFree(void **devPtr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA free failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -141,11 +145,12 @@ CUDA_CORE void CudaCore::MallocHost(void **ptr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocHost failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::MallocHost failed");
@@ -168,11 +173,12 @@ CUDA_CORE bool CudaCore::TryMallocHost(void **ptr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocHost failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -194,11 +200,12 @@ CUDA_CORE void CudaCore::FreeHost(void **ptr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeHost failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::FreeHost failed");
@@ -221,11 +228,12 @@ CUDA_CORE bool CudaCore::TryFreeHost(void **ptr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeHost failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -247,11 +255,12 @@ CUDA_CORE void CudaCore::MallocManaged(void **devPtr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocManaged failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::MallocManaged failed");
@@ -274,11 +283,12 @@ CUDA_CORE bool CudaCore::TryMallocManaged(void **devPtr, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocManaged failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -300,11 +310,12 @@ CUDA_CORE void CudaCore::FreeManaged(void **devPtr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeManaged failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::FreeManaged failed");
@@ -327,11 +338,12 @@ CUDA_CORE bool CudaCore::TryFreeManaged(void **devPtr)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeManaged failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -357,11 +369,12 @@ CUDA_CORE void CudaCore::MallocArray
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocArray failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::MallocArray failed");
@@ -388,11 +401,12 @@ CUDA_CORE bool CudaCore::TryMallocArray
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA mallocArray failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -414,11 +428,12 @@ CUDA_CORE void CudaCore::FreeArray(cudaArray_t *array)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeArray failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::FreeArray failed");
@@ -441,11 +456,12 @@ CUDA_CORE bool CudaCore::TryFreeArray(cudaArray_t *array)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA freeArray failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -468,11 +484,12 @@ CUDA_CORE void CudaCore::Memcpy(void *dst, const void *src, size_t size, cudaMem
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA memcpy failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::Memcpy failed");
@@ -496,11 +513,12 @@ CUDA_CORE bool CudaCore::TryMemcpy(void *dst, const void *src, size_t size, cuda
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA memcpy failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -523,11 +541,12 @@ CUDA_CORE void CudaCore::Memset(void *devPtr, int value, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA memset failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::Memset failed");
@@ -551,11 +570,12 @@ CUDA_CORE bool CudaCore::TryMemset(void *devPtr, int value, size_t size)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA memset failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -577,11 +597,12 @@ CUDA_CORE void CudaCore::CreateSurfaceObj(cudaSurfaceObject_t *obj, const cudaRe
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA create surface object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::CreateSurfaceObj failed");
@@ -604,11 +625,12 @@ CUDA_CORE bool CudaCore::TryCreateSurfaceObj(cudaSurfaceObject_t *obj, const cud
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA create surface object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -630,11 +652,12 @@ CUDA_CORE void CudaCore::DestroySurfaceObj(cudaSurfaceObject_t *obj)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA destroy surface object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::DestroySurfaceObj failed");
@@ -657,11 +680,12 @@ CUDA_CORE bool CudaCore::TryDestroySurfaceObj(cudaSurfaceObject_t *obj)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA destroy surface object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -688,11 +712,12 @@ CUDA_CORE void CudaCore::CreateTextureObj
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA create texture object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::CreateTextureObj failed");
@@ -720,11 +745,12 @@ CUDA_CORE bool CudaCore::TryCreateTextureObj
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA create texture object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -746,11 +772,12 @@ CUDA_CORE void CudaCore::DestroyTextureObj(cudaTextureObject_t *obj)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA destroy texture object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::DestroyTextureObj failed");
@@ -773,11 +800,12 @@ CUDA_CORE bool CudaCore::TryDestroyTextureObj(cudaTextureObject_t *obj)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA destroy texture object failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -801,11 +829,12 @@ CUDA_CORE void CudaCore::RegisterResource
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA register resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::RegisterResource failed");
@@ -828,11 +857,12 @@ CUDA_CORE bool CudaCore::TryRegisterResource(cudaGraphicsResource_t *resource, I
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA register resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -854,11 +884,12 @@ CUDA_CORE void CudaCore::UnregisterResource(cudaGraphicsResource_t *resource)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA unregister resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::UnregisterResource failed");
@@ -881,11 +912,12 @@ CUDA_CORE bool CudaCore::TryUnregisterResource(cudaGraphicsResource_t *resource)
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA unregister resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -908,11 +940,12 @@ CUDA_CORE void CudaCore::MapResource(int count, cudaGraphicsResource_t *resource
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA map resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::MapResource failed");
@@ -936,11 +969,12 @@ CUDA_CORE bool CudaCore::TryMapResource(int count, cudaGraphicsResource_t *resou
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA map resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -963,11 +997,12 @@ CUDA_CORE void CudaCore::UnmapResource(int count, cudaGraphicsResource_t *resour
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA unmap resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::UnmapResource failed");
@@ -991,11 +1026,12 @@ CUDA_CORE bool CudaCore::TryUnmapResource(int count, cudaGraphicsResource_t *res
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA unmap resource failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -1018,11 +1054,12 @@ CUDA_CORE void CudaCore::GetMappedPointer(void **devPtr, size_t *size, cudaGraph
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA get mapped pointer failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::GetMappedPointer failed");
@@ -1046,11 +1083,12 @@ CUDA_CORE bool CudaCore::TryGetMappedPointer(void **devPtr, size_t *size, cudaGr
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA get mapped pointer failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
@@ -1076,11 +1114,12 @@ CUDA_CORE void CudaCore::GetMappedArray
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA get mapped array failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         throw std::runtime_error("CudaCore::GetMappedArray failed");
@@ -1105,11 +1144,12 @@ CUDA_CORE bool CudaCore::TryGetMappedArray(cudaArray_t *array, cudaGraphicsResou
     }
     else
     {
+        cudaError_t err = cudaGetLastError();
         CudaCore::CoutErr
         ({
             "CUDA get mapped array failed.", 
-            "code:" + std::to_string(cudaGetLastError()),
-            "reason:" + std::string(cudaGetErrorString(cudaGetLastError()))
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
         });
 
         return false;
