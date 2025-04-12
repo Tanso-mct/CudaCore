@@ -126,6 +126,44 @@ TEST(CudaCore, ArrayMemoryTryVer)
     EXPECT_EQ(array, nullptr);
 }
 
+TEST(CudaCore, Array3DMemory)
+{
+    // Allocate 3D array memory
+    cudaArray_t array = nullptr;
+    size_t width = 256;
+    size_t height = 256;
+    size_t depth = 256;
+
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+    CudaCore::Malloc3DArray(&array, &channelDesc, width, height, depth, cudaArrayDefault);
+
+    // Free 3D array memory
+    CudaCore::Free3D(&array);
+
+    EXPECT_EQ(array, nullptr);
+}
+
+TEST(CudaCore, Array3DMemoryTryVer)
+{
+    bool result = true;
+
+    // Allocate 3D array memory with error checking
+    cudaArray_t array = nullptr;
+    size_t width = 256;
+    size_t height = 256;
+    size_t depth = 256;
+
+    cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
+    result = CudaCore::TryMalloc3DArray(&array, &channelDesc, width, height, depth, cudaArrayDefault);
+    ASSERT_EQ(result, true);
+
+    // Free 3D array memory
+    result = CudaCore::TryFree3D(&array);
+    ASSERT_EQ(result, true);
+
+    EXPECT_EQ(array, nullptr);
+}
+
 TEST(CudaCore, Memcpy)
 {
     // Allocate host and device memory

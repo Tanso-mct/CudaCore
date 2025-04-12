@@ -468,6 +468,128 @@ CUDA_CORE bool CudaCore::TryFreeArray(cudaArray_t *array)
     }
 }
 
+CUDA_CORE void CudaCore::Malloc3DArray
+(
+    cudaArray_t *array, const cudaChannelFormatDesc *desc, 
+    size_t width, size_t height, size_t depth, unsigned int flags
+){
+    cudaExtent extent = make_cudaExtent(width, height, depth);
+    if (CheckCudaErr(cudaMalloc3DArray(array, desc, extent, flags)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA malloc3DArray succeeded.", 
+            "address:" + ::GetPointerAddress(*array),
+            "width:" + std::to_string(width),
+            "height:" + std::to_string(height),
+            "depth:" + std::to_string(depth),
+        });
+#endif
+    }
+    else
+    {
+        cudaError_t err = cudaGetLastError();
+        CudaCore::CoutErr
+        ({
+            "CUDA malloc3DArray failed.", 
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
+        });
+
+        throw std::runtime_error("CudaCore::Malloc3DArray failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryMalloc3DArray
+(
+    cudaArray_t *array, const cudaChannelFormatDesc *desc, 
+    size_t width, size_t height, size_t depth, unsigned int flags
+){
+    cudaExtent extent = make_cudaExtent(width, height, depth);
+    if (CheckCudaErr(cudaMalloc3DArray(array, desc, extent, flags)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA malloc3DArray succeeded.", 
+            "address:" + ::GetPointerAddress(*array),
+            "width:" + std::to_string(width),
+            "height:" + std::to_string(height),
+            "depth:" + std::to_string(depth),
+        });
+#endif
+        return true;
+    }
+    else
+    {
+        cudaError_t err = cudaGetLastError();
+        CudaCore::CoutErr
+        ({
+            "CUDA malloc3DArray failed.", 
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
+        });
+
+        return false;
+    }
+}
+
+CUDA_CORE void CudaCore::Free3D(cudaArray_t *array)
+{
+    if (CheckCudaErr(cudaFreeArray(*array)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA free3DArray succeeded.", 
+            "address:" + ::GetPointerAddress(*array),
+        });
+#endif
+        *array = nullptr;
+    }
+    else
+    {
+        cudaError_t err = cudaGetLastError();
+        CudaCore::CoutErr
+        ({
+            "CUDA free3DArray failed.", 
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
+        });
+
+        throw std::runtime_error("CudaCore::Free3D failed");
+    }
+}
+
+CUDA_CORE bool CudaCore::TryFree3D(cudaArray_t *array)
+{
+    if (CheckCudaErr(cudaFreeArray(*array)))
+    {
+#ifndef NDEBUG
+        CudaCore::CoutDebug
+        ({
+            "CUDA free3DArray succeeded.", 
+            "address:" + ::GetPointerAddress(*array),
+        });
+#endif
+        *array = nullptr;
+        return true;
+    }
+    else
+    {
+        cudaError_t err = cudaGetLastError();
+        CudaCore::CoutErr
+        ({
+            "CUDA free3DArray failed.", 
+            "code:" + std::to_string(err),
+            "reason:" + std::string(cudaGetErrorString(err))
+        });
+
+        return false;
+    }
+}
+
 CUDA_CORE void CudaCore::Memcpy(void *dst, const void *src, size_t size, cudaMemcpyKind kind)
 {
     if (CheckCudaErr(cudaMemcpy(dst, src, size, kind)))
