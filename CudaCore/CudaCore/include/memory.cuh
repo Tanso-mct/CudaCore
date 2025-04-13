@@ -58,6 +58,56 @@ CUDA_CORE bool TryFree3D(cudaArray_t *array);
 CUDA_CORE void Memcpy(void *dst, const void *src, size_t size, cudaMemcpyKind kind);
 CUDA_CORE bool TryMemcpy(void *dst, const void *src, size_t size, cudaMemcpyKind kind);
 
+CUDA_CORE void Memcpy2DToArray
+(
+    cudaArray_t dst, size_t dstOffsetX, size_t dstOffsetY, 
+    const void *src, size_t srcPitch, size_t width, size_t height, cudaMemcpyKind kind = cudaMemcpyHostToDevice
+);
+CUDA_CORE bool TryMemcpy2DToArray
+(
+    cudaArray_t dst, size_t dstOffsetX, size_t dstOffsetY, 
+    const void *src, size_t srcPitch, size_t width, size_t height, cudaMemcpyKind kind = cudaMemcpyHostToDevice
+);
+
+CUDA_CORE void Memcpy2DFromArray
+(
+    void *dst, size_t dstPitch, 
+    cudaArray_t src, size_t srcOffsetW, size_t srcOffsetY, 
+    size_t width, size_t height, cudaMemcpyKind kind = cudaMemcpyDeviceToHost
+);
+CUDA_CORE bool TryMemcpy2DFromArray
+(
+    void *dst, size_t dstPitch, 
+    cudaArray_t src, size_t srcOffsetW, size_t srcOffsetY, 
+    size_t width, size_t height, cudaMemcpyKind kind = cudaMemcpyDeviceToHost
+);
+
+CUDA_CORE void Memcpy3DToArray
+(
+    cudaArray_t dst, size_t dstOffsetX, size_t dstOffsetY, size_t dstOffsetZ,
+    void *src, size_t srcPitch, 
+    size_t width, size_t height, size_t depth, cudaMemcpyKind kind = cudaMemcpyHostToDevice
+);
+CUDA_CORE bool TryMemcpy3DToArray
+(
+    cudaArray_t dst, size_t dstOffsetX, size_t dstOffsetY, size_t dstOffsetZ,
+    void *src, size_t srcPitch, 
+    size_t width, size_t height, size_t depth, cudaMemcpyKind kind = cudaMemcpyHostToDevice
+);
+
+CUDA_CORE void Memcpy3DFromArray
+(
+    void *dst, size_t dstPitch, 
+    cudaArray_t src, size_t srcOffsetW, size_t srcOffsetY, size_t srcOffsetZ,
+    size_t width, size_t height, size_t depth, cudaMemcpyKind kind = cudaMemcpyDeviceToHost
+);
+CUDA_CORE bool TryMemcpy3DFromArray
+(
+    void *dst, size_t dstPitch, 
+    cudaArray_t src, size_t srcOffsetW, size_t srcOffsetY, size_t srcOffsetZ,
+    size_t width, size_t height, size_t depth, cudaMemcpyKind kind = cudaMemcpyDeviceToHost
+);
+
 CUDA_CORE void Memset(void *devPtr, int value, size_t size);
 CUDA_CORE bool TryMemset(void *devPtr, int value, size_t size);
 

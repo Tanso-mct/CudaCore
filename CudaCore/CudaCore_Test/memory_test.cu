@@ -98,7 +98,7 @@ TEST(CudaCore, ArrayMemory)
     size_t height = 1024;
 
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
-    CudaCore::MallocArray(&array, &channelDesc, width, height, cudaArrayDefault);
+    CudaCore::MallocArray(&array, &channelDesc, width, height);
 
     // Free array memory
     CudaCore::FreeArray(&array);
@@ -116,7 +116,7 @@ TEST(CudaCore, ArrayMemoryTryVer)
     size_t height = 1024;
 
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
-    result = CudaCore::TryMallocArray(&array, &channelDesc, width, height, cudaArrayDefault);
+    result = CudaCore::TryMallocArray(&array, &channelDesc, width, height);
     ASSERT_EQ(result, true);
 
     // Free array memory
@@ -135,7 +135,7 @@ TEST(CudaCore, Array3DMemory)
     size_t depth = 256;
 
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
-    CudaCore::Malloc3DArray(&array, &channelDesc, width, height, depth, cudaArrayDefault);
+    CudaCore::Malloc3DArray(&array, &channelDesc, width, height, depth);
 
     // Free 3D array memory
     CudaCore::Free3D(&array);
@@ -154,7 +154,7 @@ TEST(CudaCore, Array3DMemoryTryVer)
     size_t depth = 256;
 
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
-    result = CudaCore::TryMalloc3DArray(&array, &channelDesc, width, height, depth, cudaArrayDefault);
+    result = CudaCore::TryMalloc3DArray(&array, &channelDesc, width, height, depth);
     ASSERT_EQ(result, true);
 
     // Free 3D array memory
@@ -226,6 +226,152 @@ TEST(CudaCore, MemcpyTryVer)
     result = CudaCore::TryFreeHost(&hArray);
     ASSERT_EQ(result, true);
     result = CudaCore::TryFree(&dArray);
+    ASSERT_EQ(result, true);
+
+    EXPECT_EQ(hArray, nullptr);
+    EXPECT_EQ(dArray, nullptr);
+}
+
+TEST(CudaCore, Memcpy2DArray)
+{
+    // Allocate host and device memory
+    void* hArray = nullptr;
+    cudaArray_t dArray = nullptr;
+    size_t width = 1024;
+    size_t height = 1024;
+    size_t pitch = width * sizeof(float);
+    CudaCore::MallocHost(&hArray, pitch * height);
+    CudaCore::MallocArray(&dArray, &cudaCreateChannelDesc<float>(), width, height);
+
+    // Initialize host memory
+    float* hArrayFloat = static_cast<float*>(hArray);
+    for (size_t i = 0; i < width * height; i++)
+    {
+        hArrayFloat[i] = static_cast<float>(i);
+    }
+
+    // Copy data from host to device
+    CudaCore::Memcpy2DToArray(dArray, 0, 0, hArray, pitch, width, height);
+
+    // Copy data from device to host
+    CudaCore::Memcpy2DFromArray(hArray, pitch, dArray, 0, 0, width, height);
+
+    // Free memory
+    CudaCore::FreeHost(&hArray);
+    CudaCore::FreeArray(&dArray);
+
+    EXPECT_EQ(hArray, nullptr);
+    EXPECT_EQ(dArray, nullptr);
+}
+
+TEST(CudaCore, Memcpy2DArrayTryVer)
+{
+    bool result = true;
+
+    // Allocate host and device memory with error checking
+    void* hArray = nullptr;
+    cudaArray_t dArray = nullptr;
+    size_t width = 1024;
+    size_t height = 1024;
+    size_t pitch = width * sizeof(float);
+    result = CudaCore::TryMallocHost(&hArray, pitch * height);
+    ASSERT_EQ(result, true);
+    result = CudaCore::TryMallocArray(&dArray, &cudaCreateChannelDesc<float>(), width, height);
+    ASSERT_EQ(result, true);
+
+    // Initialize host memory
+    float* hArrayFloat = static_cast<float*>(hArray);
+    for (size_t i = 0; i < width * height; i++)
+    {
+        hArrayFloat[i] = static_cast<float>(i);
+    }
+
+    // Copy data from host to device with error checking
+    result = CudaCore::TryMemcpy2DToArray(dArray, 0, 0, hArray, pitch, width, height);
+    ASSERT_EQ(result, true);
+
+    // Copy data from device to host with error checking
+    result = CudaCore::TryMemcpy2DFromArray(hArray, pitch, dArray, 0, 0, width, height);
+    ASSERT_EQ(result, true);
+
+    // Free memory with error checking
+    result = CudaCore::TryFreeHost(&hArray);
+    ASSERT_EQ(result, true);
+    result = CudaCore::TryFreeArray(&dArray);
+    ASSERT_EQ(result, true);
+
+    EXPECT_EQ(hArray, nullptr);
+    EXPECT_EQ(dArray, nullptr);
+}
+
+TEST(CudaCore, Memcpy3DArray)
+{
+    // Allocate host and device memory
+    void* hArray = nullptr;
+    cudaArray_t dArray = nullptr;
+    size_t width = 256;
+    size_t height = 256;
+    size_t depth = 256;
+    size_t pitch = width * sizeof(float);
+    CudaCore::MallocHost(&hArray, pitch * height * depth);
+    CudaCore::Malloc3DArray(&dArray, &cudaCreateChannelDesc<float>(), width, height, depth);
+
+    // Initialize host memory
+    float* hArrayFloat = static_cast<float*>(hArray);
+    for (size_t i = 0; i < width * height * depth; i++)
+    {
+        hArrayFloat[i] = static_cast<float>(i);
+    }
+
+    // Copy data from host to device
+    CudaCore::Memcpy3DToArray(dArray, 0, 0, 0, hArray, pitch, width, height, depth);
+
+    // Copy data from device to host
+    CudaCore::Memcpy3DFromArray(hArray, pitch, dArray, 0, 0, 0, width, height, depth);
+
+    // Free memory
+    CudaCore::FreeHost(&hArray);
+    CudaCore::Free3D(&dArray);
+
+    EXPECT_EQ(hArray, nullptr);
+    EXPECT_EQ(dArray, nullptr);
+}
+
+TEST(CudaCore, Memcpy3DArrayTryVer)
+{
+    bool result = true;
+
+    // Allocate host and device memory with error checking
+    void* hArray = nullptr;
+    cudaArray_t dArray = nullptr;
+    size_t width = 256;
+    size_t height = 256;
+    size_t depth = 256;
+    size_t pitch = width * sizeof(float);
+    result = CudaCore::TryMallocHost(&hArray, pitch * height * depth);
+    ASSERT_EQ(result, true);
+    result = CudaCore::TryMalloc3DArray(&dArray, &cudaCreateChannelDesc<float>(), width, height, depth);
+    ASSERT_EQ(result, true);
+
+    // Initialize host memory
+    float* hArrayFloat = static_cast<float*>(hArray);
+    for (size_t i = 0; i < width * height * depth; i++)
+    {
+        hArrayFloat[i] = static_cast<float>(i);
+    }
+
+    // Copy data from host to device with error checking
+    result = CudaCore::TryMemcpy3DToArray(dArray, 0, 0, 0, hArray, pitch, width, height, depth);
+    ASSERT_EQ(result, true);
+
+    // Copy data from device to host with error checking
+    result = CudaCore::TryMemcpy3DFromArray(hArray, pitch, dArray, 0, 0, 0, width, height, depth);
+    ASSERT_EQ(result, true);
+
+    // Free memory with error checking
+    result = CudaCore::TryFreeHost(&hArray);
+    ASSERT_EQ(result, true);
+    result = CudaCore::TryFree3D(&dArray);
     ASSERT_EQ(result, true);
 
     EXPECT_EQ(hArray, nullptr);
