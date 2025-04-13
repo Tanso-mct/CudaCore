@@ -1,5 +1,10 @@
 ﻿#include "pch.h"
 
+#include "CudaCore/include/CudaCore.h"
+#pragma comment(lib, "CudaCore.lib")
+
+#pragma comment(lib, "d3d11.lib")
+
 TEST(CudaCore, DeviceMemory) 
 {
     // Allocate device memory
